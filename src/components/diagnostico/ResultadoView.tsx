@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ModalContato from './ModalContato'
 
 type Props = {
@@ -95,6 +95,12 @@ function IndicesSaude({ urgencia }: { urgencia: string | null }) {
 export default function ResultadoView({ diagnostic }: Props) {
   const [modalAberto, setModalAberto] = useState(false)
   const [contatoEnviado, setContatoEnviado] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'ViewContent')
+    }
+  }, [])
 
   const isAlta = diagnostic.urgencia === 'alta'
   const paragrafos = parseOutput(diagnostic.output_1)
@@ -197,7 +203,12 @@ export default function ResultadoView({ diagnostic }: Props) {
                 </div>
               )}
               <button
-                onClick={() => setModalAberto(true)}
+                onClick={() => {
+                  if (typeof window !== 'undefined' && window.fbq) {
+                    window.fbq('track', 'Lead')
+                  }
+                  setModalAberto(true)
+                }}
                 className="w-full py-4 text-white font-semibold text-base transition-colors"
                 style={{
                   background: isAlta ? '#92400E' : '#1B3A2D',

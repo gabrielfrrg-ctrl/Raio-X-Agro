@@ -248,7 +248,12 @@ export default function Etapa1({ dados, onChange, onAvancar, modoUpload, onModoU
       )}
 
       <button
-        onClick={onAvancar}
+        onClick={() => {
+          if (typeof window !== 'undefined' && window.fbq) {
+            window.fbq('track', 'InitiateCheckout')
+          }
+          onAvancar()
+        }}
         disabled={!valido}
         className="w-full py-3 text-white font-semibold transition-colors mt-2 disabled:opacity-40 disabled:cursor-not-allowed"
         style={{ background: '#1B3A2D', borderRadius: '6px' }}
