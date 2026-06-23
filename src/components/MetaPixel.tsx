@@ -22,7 +22,7 @@ export default function MetaPixel() {
           t.src=v;s=b.getElementsByTagName(e)[0];
           s.parentNode.insertBefore(t,s)}(window,document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
-          fbq('init', '2234926567318048');
+          fbq('init', '1672271540688971');
           fbq('track', 'PageView');
         `,
       }}
