@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #F7F5F0;
+  --primary: #1B3A2D;
+  --primary-hover: #142d22;
+  --accent: #8B6914;
+  --text: #1A1A1A;
+  --text-muted: #4B5563;
+  --border: #D1C9B8;
+  --placeholder: #9CA3AF;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Placeholder global */
+::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+/* Responsividade — evitar zoom iOS */
+input, select, textarea {
+  font-size: 16px !important;
+  min-height: 48px;
+}
+
+/* Botões primários — altura mínima obrigatória */
+button[style*="1B3A2D"],
+button[style*="background: #1B3A2D"] {
+  min-height: 52px;
+}
+
+/* Remove overflow horizontal */
+html, body {
+  overflow-x: hidden;
 }
