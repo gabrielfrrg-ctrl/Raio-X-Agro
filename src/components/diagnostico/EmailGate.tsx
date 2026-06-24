@@ -15,23 +15,8 @@ type Props = {
   onSucesso: () => void
 }
 
-const inputBase: React.CSSProperties = {
-  width: '100%',
-  height: 48,
-  padding: '0 14px',
-  border: '1px solid #D1C9B8',
-  borderRadius: 6,
-  fontSize: 15,
-  color: '#1A1A1A',
-  background: '#fff',
-  outline: 'none',
-  boxSizing: 'border-box',
-}
-
 export default function EmailGate({ diagnosticId, urgencia, onSucesso }: Props) {
-  const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
-  const [telefone, setTelefone] = useState('')
   const [loading, setLoading] = useState(false)
   const [erro, setErro] = useState('')
 
@@ -44,10 +29,6 @@ export default function EmailGate({ diagnosticId, urgencia, onSucesso }: Props) 
       setErro('Email é obrigatório.')
       return
     }
-    if (!nome.trim()) {
-      setErro('Nome é obrigatório.')
-      return
-    }
 
     setLoading(true)
     setErro('')
@@ -56,7 +37,7 @@ export default function EmailGate({ diagnosticId, urgencia, onSucesso }: Props) 
       const resp = await fetch('/api/diagnostico/email-gate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ diagnostic_id: diagnosticId, nome, email, telefone }),
+        body: JSON.stringify({ diagnostic_id: diagnosticId, email }),
       })
 
       if (!resp.ok) {
@@ -80,24 +61,21 @@ export default function EmailGate({ diagnosticId, urgencia, onSucesso }: Props) 
 
   return (
     <div className="min-h-screen px-4 py-10" style={{ background: '#F7F5F0' }}>
-      <div style={{ maxWidth: 560, margin: '0 auto' }}>
+      <div style={{ maxWidth: 480, margin: '0 auto' }}>
 
         {/* Header */}
-        <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#9CA3AF', letterSpacing: '1.5px' }}>
-            diagnóstico do negócio
-          </p>
-          <div className="h-px mb-8" style={{ background: '#D1C9B8' }} />
-        </div>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#9CA3AF', letterSpacing: '1.5px' }}>
+          diagnóstico do negócio
+        </p>
+        <div className="h-px mb-8" style={{ background: '#D1C9B8' }} />
 
         {/* Índice de saúde — preview */}
         <div className="rounded-xl p-5 mb-8" style={{ background: '#fff', border: '0.5px solid #D1C9B8' }}>
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#9CA3AF', letterSpacing: '1.5px' }}>
-            Índice de saúde financeira
+            Seu índice está pronto.
           </p>
-          <div className="w-full h-1 rounded-full mb-3" style={{ background: cfg.cor }} />
-          <p className="text-base font-semibold mb-1" style={{ color: cfg.nomeColor }}>{cfg.nome}</p>
-          <p className="text-sm" style={{ color: '#6B7280' }}>Seu índice está pronto.</p>
+          <div className="w-full rounded-full mb-3" style={{ background: cfg.cor, height: 4 }} />
+          <p className="text-base font-semibold" style={{ color: cfg.nomeColor }}>{cfg.nome}</p>
         </div>
 
         {/* Formulário */}
@@ -106,57 +84,33 @@ export default function EmailGate({ diagnosticId, urgencia, onSucesso }: Props) 
             fontFamily: 'Georgia, serif',
             fontSize: 22,
             color: '#1B3A2D',
-            lineHeight: 1.4,
+            lineHeight: 1.45,
             margin: '0 0 24px',
           }}>
-            Informe seu email para ver o diagnóstico completo e recebê-lo na sua caixa de entrada.
+            Informe seu email para ver o diagnóstico completo.
           </h2>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {/* Email */}
-            <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#1A1A1A', marginBottom: 6 }}>
-                E-mail <span style={{ color: '#EF4444' }}>*</span>
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
-                required
-                style={inputBase}
-              />
-            </div>
-
-            {/* Nome */}
-            <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#1A1A1A', marginBottom: 6 }}>
-                Nome <span style={{ color: '#EF4444' }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="Como posso te chamar?"
-                required
-                style={inputBase}
-              />
-            </div>
-
-            {/* Telefone (opcional) */}
-            <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#1A1A1A', marginBottom: 6 }}>
-                Telefone{' '}
-                <span style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 400 }}>(opcional)</span>
-              </label>
-              <input
-                type="tel"
-                value={telefone}
-                onChange={(e) => setTelefone(e.target.value)}
-                placeholder="(00) 99999-9999"
-                style={inputBase}
-              />
-            </div>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="seu@email.com"
+              required
+              autoFocus
+              style={{
+                width: '100%',
+                height: 52,
+                padding: '0 16px',
+                border: '1px solid #D1C9B8',
+                borderRadius: 6,
+                fontSize: 16,
+                color: '#1A1A1A',
+                background: '#fff',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
 
             {erro && (
               <p style={{ fontSize: 13, color: '#991B1B', margin: 0 }}>{erro}</p>
@@ -164,7 +118,7 @@ export default function EmailGate({ diagnosticId, urgencia, onSucesso }: Props) 
 
             <button
               type="submit"
-              disabled={loading || !email.trim() || !nome.trim()}
+              disabled={loading || !email.trim()}
               style={{
                 width: '100%',
                 height: 52,
@@ -174,24 +128,25 @@ export default function EmailGate({ diagnosticId, urgencia, onSucesso }: Props) 
                 fontSize: 15,
                 border: 'none',
                 borderRadius: 6,
-                cursor: 'pointer',
-                opacity: (loading || !email.trim() || !nome.trim()) ? 0.4 : 1,
-                marginTop: 4,
+                cursor: loading || !email.trim() ? 'not-allowed' : 'pointer',
+                opacity: loading || !email.trim() ? 0.4 : 1,
+                transition: 'opacity 0.15s',
               }}
             >
-              {loading ? 'Aguarde...' : 'Ver meu diagnóstico completo'}
+              {loading ? 'Aguarde...' : 'Ver meu diagnóstico'}
             </button>
           </form>
 
-          <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 14, textAlign: 'center', lineHeight: 1.5 }}>
-            Você também receberá o diagnóstico no email. Sem spam. Cancele quando quiser.
+          <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 14, textAlign: 'center', lineHeight: 1.6 }}>
+            Enviamos uma cópia para o seu email. Sem spam.
           </p>
-          <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 6, textAlign: 'center' }}>
+          <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 4, textAlign: 'center' }}>
             <Link href="/privacidade" style={{ color: '#9CA3AF', textDecoration: 'underline' }} target="_blank">
               Política de Privacidade
             </Link>
           </p>
         </div>
+
       </div>
     </div>
   )
