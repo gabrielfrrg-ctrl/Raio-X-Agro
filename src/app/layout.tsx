@@ -9,8 +9,11 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Raio X Agro — Diagnóstico Financeiro para o Agronegócio",
-  description: "Diagnóstico financeiro gratuito para o agronegócio. Sem conflito de interesse. Sem compromisso.",
+  title: "Raio X Agro — Diagnóstico Financeiro",
+  description: "Diagnóstico financeiro gratuito para o agronegócio.",
+  icons: {
+    icon: "/favicon.svg",
+  },
   openGraph: {
     title: "Raio X Agro — Diagnóstico Financeiro para o Agronegócio",
     description: "Diagnóstico financeiro gratuito para o agronegócio. Sem conflito de interesse. Sem compromisso.",

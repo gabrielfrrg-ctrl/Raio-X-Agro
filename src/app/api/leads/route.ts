@@ -40,26 +40,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Erro ao salvar contato.' }, { status: 500 })
   }
 
-  // Notifica consultor por email
+  // Notifica consultor por email — todos os leads, sem filtro de urgência
   if (process.env.CONSULTANT_EMAIL && process.env.RESEND_API_KEY && diagnostic) {
     const urgenciaEmoji = diagnostic.urgencia === 'alta' ? '🚨' : diagnostic.urgencia === 'media' ? '⚠️' : '📋'
-    const painel = `${process.env.NEXT_PUBLIC_SITE_URL || ''}/admin/${diagnostic_id}`
+    const painel = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://raio-x-agro.vercel.app'}/admin/${diagnostic_id}`
 
     await getResend()!.emails.send({
-      from: 'notificacao@raixoagro.com.br',
+      from: 'Raio X Agro <onboarding@resend.dev>',
       to: process.env.CONSULTANT_EMAIL,
-      subject: `${urgenciaEmoji} Lead pediu contato — ${diagnostic.subsetor} / ${diagnostic.estado}`,
+      subject: `${urgenciaEmoji} Novo lead — ${diagnostic.subsetor} / ${diagnostic.estado}`,
       html: `
-        <h2>Lead solicitou aprofundamento</h2>
+        <h2>Lead solicitou contato</h2>
         <ul>
           <li><strong>Nome:</strong> ${nome || '—'}</li>
           <li><strong>WhatsApp:</strong> ${whatsapp || '—'}</li>
           <li><strong>E-mail:</strong> ${email || '—'}</li>
           <li><strong>Subsetor:</strong> ${diagnostic.subsetor}</li>
           <li><strong>Estado:</strong> ${diagnostic.estado}</li>
-          <li><strong>Urgência:</strong> ${diagnostic.urgencia?.toUpperCase()}</li>
+          <li><strong>Urgência:</strong> ${diagnostic.urgencia?.toUpperCase() || '—'}</li>
         </ul>
-        <p><a href="${painel}">Ver diagnóstico completo</a></p>
+        <p><a href="${painel}">Ver diagnóstico completo no painel</a></p>
       `,
     }).catch(console.error)
   }

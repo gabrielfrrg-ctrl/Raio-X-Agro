@@ -23,18 +23,16 @@ export default function ConsentimentoLGPD({ onContinuar }: { onContinuar: () => 
 
           <div className="space-y-3 mb-6" style={{ color: '#4B5563', fontSize: '0.9rem', lineHeight: '1.65' }}>
             <p>
-              As informações que você compartilha aqui são utilizadas exclusivamente para gerar seu
-              diagnóstico financeiro. Não compartilhamos seus dados com terceiros. Ao continuar, você
-              concorda com nossa{' '}
+              Autorizo o Raio X Agro a utilizar as informações fornecidas para fins de diagnóstico
+              financeiro e a compartilhá-las com consultores parceiros credenciados pela plataforma
+              para eventual contato sobre os resultados.
+            </p>
+            <p>
+              Ao continuar, você concorda com nossa{' '}
               <Link href="/privacidade" className="underline" style={{ color: '#8B6914' }} target="_blank">
                 Política de Privacidade
               </Link>
               .
-            </p>
-            <p>
-              Caso o diagnóstico identifique oportunidades relevantes para sua operação e você tenha
-              interesse, um consultor especializado em agronegócio pode entrar em contato — só se você
-              quiser.
             </p>
           </div>
 
