@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import ModalContato from './ModalContato'
+import EmailGate from './EmailGate'
 
 type Props = {
   diagnostic: {
@@ -93,6 +94,7 @@ function IndicesSaude({ urgencia }: { urgencia: string | null }) {
 }
 
 export default function ResultadoView({ diagnostic }: Props) {
+  const [emailSubmetido, setEmailSubmetido] = useState(false)
   const [modalAberto, setModalAberto] = useState(false)
   const [contatoEnviado, setContatoEnviado] = useState(false)
 
@@ -101,6 +103,16 @@ export default function ResultadoView({ diagnostic }: Props) {
       window.fbq('track', 'ViewContent')
     }
   }, [])
+
+  if (!emailSubmetido) {
+    return (
+      <EmailGate
+        diagnosticId={diagnostic.id}
+        urgencia={diagnostic.urgencia}
+        onSucesso={() => setEmailSubmetido(true)}
+      />
+    )
+  }
 
   const isAlta = diagnostic.urgencia === 'alta'
   const paragrafos = parseOutput(diagnostic.output_1)

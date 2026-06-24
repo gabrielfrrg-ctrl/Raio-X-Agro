@@ -21,7 +21,7 @@ export type Subsetor =
 export type Trajetoria = 'cresceu' | 'estavel' | 'caiu'
 export type Resultado = 'positivo' | 'negativo' | 'empatou'
 export type Urgencia = 'alta' | 'media' | 'baixa'
-export type StatusDiagnostico = 'aguardando' | 'em_atendimento' | 'convertido' | 'descartado'
+export type StatusDiagnostico = 'aguardando' | 'com_dados' | 'em_atendimento' | 'convertido' | 'descartado'
 
 // Dados do formulário (3 etapas)
 export type FormDados = {

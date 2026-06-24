@@ -23,10 +23,13 @@ const URGENCIA_CONFIG: Record<Urgencia, { label: string; color: string }> = {
 
 const STATUS_CONFIG: Record<StatusDiagnostico, { label: string; color: string }> = {
   aguardando: { label: 'Aguardando', color: 'bg-gray-100 text-gray-600' },
+  com_dados: { label: 'Com dados', color: 'bg-amber-100 text-amber-700' },
   em_atendimento: { label: 'Em atendimento', color: 'bg-blue-100 text-blue-700' },
   convertido: { label: 'Convertido', color: 'bg-green-100 text-green-700' },
   descartado: { label: 'Descartado', color: 'bg-gray-100 text-gray-400' },
 }
+
+type LeadRow = { id: string; whatsapp: string | null }
 
 type Diagnostic = {
   id: string
@@ -36,6 +39,24 @@ type Diagnostic = {
   faturamento_rs: number
   urgencia: string | null
   status: string
+  leads?: LeadRow[]
+}
+
+// Calcula nível de funil do lead
+function calcNivel(d: Diagnostic): 'iniciou' | 'com_dados' | 'quer_contato' {
+  const leads = d.leads ?? []
+  // "Quer contato": tem lead do CTA (whatsapp preenchido ou whatsapp sem prefixo "tel:")
+  const temCTA = leads.some((l) => l.whatsapp && !l.whatsapp.startsWith('tel:'))
+  if (temCTA) return 'quer_contato'
+  // "Com dados": status='com_dados' OR tem lead do gate (whatsapp null ou prefixo tel:)
+  if (d.status === 'com_dados' || leads.length > 0) return 'com_dados'
+  return 'iniciou'
+}
+
+const NIVEL_CONFIG = {
+  iniciou: { label: 'Iniciou', color: 'bg-gray-100 text-gray-500' },
+  com_dados: { label: 'Com dados', color: 'bg-amber-100 text-amber-700' },
+  quer_contato: { label: 'Quer contato', color: 'bg-green-100 text-green-700' },
 }
 
 export default function AdminLista({ diagnosticos }: { diagnosticos: Diagnostic[] }) {
@@ -124,6 +145,7 @@ export default function AdminLista({ diagnosticos }: { diagnosticos: Diagnostic[
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Estado</th>
                 <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Faturamento</th>
                 <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Urgência</th>
+                <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Nível</th>
                 <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
                 <th className="px-4 py-3" />
               </tr>
@@ -131,7 +153,7 @@ export default function AdminLista({ diagnosticos }: { diagnosticos: Diagnostic[
             <tbody className="divide-y divide-gray-100">
               {lista.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-12 text-gray-400 text-sm">
+                  <td colSpan={8} className="text-center py-12 text-gray-400 text-sm">
                     Nenhum diagnóstico encontrado.
                   </td>
                 </tr>
@@ -158,6 +180,17 @@ export default function AdminLista({ diagnosticos }: { diagnosticos: Diagnostic[
                             {urgConf.label}
                           </span>
                         ) : '—'}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {(() => {
+                          const nivel = calcNivel(d)
+                          const nc = NIVEL_CONFIG[nivel]
+                          return (
+                            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${nc.color}`}>
+                              {nc.label}
+                            </span>
+                          )
+                        })()}
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusConf?.color || ''}`}>
